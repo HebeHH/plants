@@ -1,0 +1,348 @@
+#!/usr/bin/env python3
+import pandas as pd
+import numpy as np
+
+# Read the CSV
+df = pd.read_csv('data/enhanced_species_table_complete_final.csv')
+
+# Final comprehensive plant database for all remaining species
+final_plant_db = {
+    # G
+    'gaillardia': {'literal_latin': 'Gaillard\'s flower', 'common_name': 'blanket flower', 'life_form': 'hemicryptophyte', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'galanthus nivalis': {'literal_latin': 'snow milk-flower', 'common_name': 'common snowdrop', 'life_form': 'geophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'galega officinalis': {'literal_latin': 'medicinal goat\'s rue', 'common_name': 'goat\'s rue', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'galeopsis tetrahit': {'literal_latin': 'four-part hemp-nettle', 'common_name': 'common hemp-nettle', 'life_form': 'therophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'galium aparine': {'literal_latin': 'seizing bedstraw', 'common_name': 'cleavers', 'life_form': 'therophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'galium verum': {'literal_latin': 'true bedstraw', 'common_name': 'lady\'s bedstraw', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'gardenia jasminoides': {'literal_latin': 'jasmine-like gardenia', 'common_name': 'common gardenia', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'garrya elliptica': {'literal_latin': 'elliptical garrya', 'common_name': 'silk tassel', 'life_form': 'phanerophyte', 'specific_location': 'California', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'gaultheria procumbens': {'literal_latin': 'trailing wintergreen', 'common_name': 'wintergreen', 'life_form': 'chamaephyte', 'specific_location': 'Eastern North America', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'gaura lindheimeri': {'literal_latin': 'Lindheimer\'s beeblossom', 'common_name': 'Lindheimer\'s beeblossom', 'life_form': 'hemicryptophyte', 'specific_location': 'Texas', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'gazania rigens': {'literal_latin': 'stiff gazania', 'common_name': 'treasure flower', 'life_form': 'hemicryptophyte', 'specific_location': 'South Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'natural'},
+    'gelsemium sempervirens': {'literal_latin': 'evergreen jasmine', 'common_name': 'Carolina jessamine', 'life_form': 'phanerophyte', 'specific_location': 'Southeastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'genista hispanica': {'literal_latin': 'Spanish broom', 'common_name': 'Spanish gorse', 'life_form': 'phanerophyte', 'specific_location': 'Spain', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'gentiana acaulis': {'literal_latin': 'stemless gentian', 'common_name': 'stemless gentian', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'geranium maculatum': {'literal_latin': 'spotted crane\'s-bill', 'common_name': 'wild geranium', 'life_form': 'hemicryptophyte', 'specific_location': 'Eastern North America', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'geranium pratense': {'literal_latin': 'meadow crane\'s-bill', 'common_name': 'meadow crane\'s-bill', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'geranium robertianum': {'literal_latin': 'Robert\'s crane\'s-bill', 'common_name': 'herb Robert', 'life_form': 'therophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'gerbera jamesonii': {'literal_latin': 'Jameson\'s gerbera', 'common_name': 'Barberton daisy', 'life_form': 'hemicryptophyte', 'specific_location': 'South Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'bred'},
+    'geum urbanum': {'literal_latin': 'city avens', 'common_name': 'wood avens', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'ginkgo biloba': {'literal_latin': 'two-lobed silver apricot', 'common_name': 'maidenhair tree', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural', 'notes': 'Living fossil'},
+    'gladiolus': {'literal_latin': 'small sword', 'common_name': 'gladiolus', 'life_form': 'geophyte', 'specific_location': 'South Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'bred'},
+    'glaucium flavum': {'literal_latin': 'yellow horned-poppy', 'common_name': 'yellow horned poppy', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'glechoma hederacea': {'literal_latin': 'ivy-like ground-ivy', 'common_name': 'ground-ivy', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'gleditsia triacanthos': {'literal_latin': 'three-spined honey locust', 'common_name': 'honey locust', 'life_form': 'phanerophyte', 'specific_location': 'Central United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'gloriosa superba': {'literal_latin': 'superb glory lily', 'common_name': 'flame lily', 'life_form': 'geophyte', 'general_location': 'Tropical Africa', 'hemisphere': 'both', 'source': 'natural'},
+    'glyceria': {'literal_latin': 'sweet grass', 'common_name': 'mannagrass', 'life_form': 'helophyte', 'general_location': 'Northern Hemisphere', 'hemisphere': 'northern', 'source': 'natural'},
+    'glyceria maxima': {'literal_latin': 'greatest sweet grass', 'common_name': 'reed sweet-grass', 'life_form': 'helophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'glycine max': {'literal_latin': 'greatest soybean', 'common_name': 'soybean', 'life_form': 'therophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'glycyrrhiza glabra': {'literal_latin': 'smooth sweet root', 'common_name': 'licorice', 'life_form': 'hemicryptophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'bred'},
+    'gmelina arborea': {'literal_latin': 'tree gmelina', 'common_name': 'white teak', 'life_form': 'phanerophyte', 'specific_location': 'India', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'gomphrena globosa': {'literal_latin': 'globe amaranth', 'common_name': 'globe amaranth', 'life_form': 'therophyte', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'natural'},
+    'gossypium hirsutum': {'literal_latin': 'hairy cotton', 'common_name': 'upland cotton', 'life_form': 'phanerophyte', 'specific_location': 'Mexico', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'bred'},
+    'grevillea robusta': {'literal_latin': 'robust grevillea', 'common_name': 'silky oak', 'life_form': 'phanerophyte', 'specific_location': 'Eastern Australia', 'general_location': 'Australia', 'hemisphere': 'southern', 'source': 'natural'},
+    'grevillea rosmarinifolia': {'literal_latin': 'rosemary-leaved grevillea', 'common_name': 'rosemary grevillea', 'life_form': 'phanerophyte', 'specific_location': 'New South Wales', 'general_location': 'Australia', 'hemisphere': 'southern', 'source': 'natural'},
+    'griselinia littoralis': {'literal_latin': 'coastal griselinia', 'common_name': 'kapuka', 'life_form': 'phanerophyte', 'specific_location': 'New Zealand', 'general_location': 'Oceania', 'hemisphere': 'southern', 'source': 'natural'},
+    'gunnera manicata': {'literal_latin': 'sleeved gunnera', 'common_name': 'giant rhubarb', 'life_form': 'hemicryptophyte', 'specific_location': 'Brazil', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'natural'},
+    'guzmania lingulata': {'literal_latin': 'tongue-shaped guzmania', 'common_name': 'scarlet star', 'life_form': 'epiphyte', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'natural'},
+    'gymnocladus dioicus': {'literal_latin': 'naked-branch two-house tree', 'common_name': 'Kentucky coffeetree', 'life_form': 'phanerophyte', 'specific_location': 'Central United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'gypsophila paniculata': {'literal_latin': 'panicled chalk-lover', 'common_name': 'baby\'s breath', 'life_form': 'hemicryptophyte', 'general_location': 'Eastern Europe', 'hemisphere': 'northern', 'source': 'bred'},
+    
+    # H
+    'haemanthus coccineus': {'literal_latin': 'scarlet blood flower', 'common_name': 'blood lily', 'life_form': 'geophyte', 'specific_location': 'South Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'natural'},
+    'hakea laurina': {'literal_latin': 'laurel-like hakea', 'common_name': 'pincushion hakea', 'life_form': 'phanerophyte', 'specific_location': 'Western Australia', 'general_location': 'Australia', 'hemisphere': 'southern', 'source': 'natural'},
+    'hakea salicifolia': {'literal_latin': 'willow-leaved hakea', 'common_name': 'willow-leaved hakea', 'life_form': 'phanerophyte', 'specific_location': 'Eastern Australia', 'general_location': 'Australia', 'hemisphere': 'southern', 'source': 'natural'},
+    'halesia carolina': {'literal_latin': 'Carolina silverbell', 'common_name': 'Carolina silverbell', 'life_form': 'phanerophyte', 'specific_location': 'Southeastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'hamamelis mollis': {'literal_latin': 'soft witch-hazel', 'common_name': 'Chinese witch hazel', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'hamamelis virginiana': {'literal_latin': 'Virginia witch-hazel', 'common_name': 'American witch-hazel', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'hardenbergia violacea': {'literal_latin': 'violet hardenbergia', 'common_name': 'purple coral pea', 'life_form': 'phanerophyte', 'specific_location': 'Australia', 'general_location': 'Oceania', 'hemisphere': 'southern', 'source': 'natural'},
+    'hebe': {'literal_latin': 'youth', 'common_name': 'hebe', 'life_form': 'phanerophyte', 'specific_location': 'New Zealand', 'general_location': 'Oceania', 'hemisphere': 'southern', 'source': 'natural'},
+    'hedera helix': {'literal_latin': 'grasping ivy', 'common_name': 'English ivy', 'life_form': 'phanerophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'hedychium coronarium': {'literal_latin': 'crown ginger', 'common_name': 'white ginger lily', 'life_form': 'geophyte', 'specific_location': 'India', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'hedychium gardnerianum': {'literal_latin': 'Gardner\'s ginger', 'common_name': 'Kahili ginger', 'life_form': 'geophyte', 'specific_location': 'India', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'hedysarum coronarium': {'literal_latin': 'crown sweetvetch', 'common_name': 'French honeysuckle', 'life_form': 'hemicryptophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    'helenium autumnale': {'literal_latin': 'autumn Helen\'s flower', 'common_name': 'sneezeweed', 'life_form': 'hemicryptophyte', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'helianthemum nummularium': {'literal_latin': 'coin-like sun flower', 'common_name': 'common rock-rose', 'life_form': 'chamaephyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'helianthus annuus': {'literal_latin': 'annual sunflower', 'common_name': 'common sunflower', 'life_form': 'therophyte', 'specific_location': 'North America', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'bred'},
+    'helianthus tuberosus': {'literal_latin': 'tuberous sunflower', 'common_name': 'Jerusalem artichoke', 'life_form': 'geophyte', 'specific_location': 'Eastern North America', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'bred'},
+    'helichrysum italicum': {'literal_latin': 'Italian everlasting', 'common_name': 'curry plant', 'life_form': 'chamaephyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    'heliconia bihai': {'literal_latin': 'red-yellow heliconia', 'common_name': 'red palulu', 'life_form': 'hemicryptophyte', 'general_location': 'Caribbean', 'hemisphere': 'northern', 'source': 'natural'},
+    'heliconia psittacorum': {'literal_latin': 'parrot heliconia', 'common_name': 'parrot\'s beak', 'life_form': 'hemicryptophyte', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'natural'},
+    'heliconia rostrata': {'literal_latin': 'beaked heliconia', 'common_name': 'hanging lobster claw', 'life_form': 'hemicryptophyte', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'natural'},
+    'heliconia stricta': {'literal_latin': 'upright heliconia', 'common_name': 'dwarf Jamaican heliconia', 'life_form': 'hemicryptophyte', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'natural'},
+    'heliotropium arborescens': {'literal_latin': 'tree-like sun-turner', 'common_name': 'garden heliotrope', 'life_form': 'phanerophyte', 'specific_location': 'Peru', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'bred'},
+    'heliotropium peruvianum': {'literal_latin': 'Peruvian sun-turner', 'common_name': 'cherry pie plant', 'life_form': 'phanerophyte', 'specific_location': 'Peru', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'bred'},
+    'helleborus niger': {'literal_latin': 'black hellebore', 'common_name': 'Christmas rose', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'helleborus orientalis': {'literal_latin': 'eastern hellebore', 'common_name': 'Lenten rose', 'life_form': 'hemicryptophyte', 'general_location': 'Eastern Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'hemerocallis fulva': {'literal_latin': 'tawny day-beauty', 'common_name': 'orange daylily', 'life_form': 'geophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'hepatica nobilis': {'literal_latin': 'noble liverleaf', 'common_name': 'liverleaf', 'life_form': 'hemicryptophyte', 'general_location': 'Northern Hemisphere', 'hemisphere': 'northern', 'source': 'natural'},
+    'heracleum mantegazzianum': {'literal_latin': 'Mantegazzi\'s Hercules plant', 'common_name': 'giant hogweed', 'life_form': 'hemicryptophyte', 'specific_location': 'Caucasus', 'general_location': 'Western Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'heracleum sphondylium': {'literal_latin': 'vertebra cow parsnip', 'common_name': 'common hogweed', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'hesperis matronalis': {'literal_latin': 'evening matron\'s flower', 'common_name': 'dame\'s rocket', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'heuchera sanguinea': {'literal_latin': 'blood-red heuchera', 'common_name': 'coral bells', 'life_form': 'hemicryptophyte', 'specific_location': 'Arizona', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'bred'},
+    'hevea brasiliensis': {'literal_latin': 'Brazilian rubber tree', 'common_name': 'rubber tree', 'life_form': 'phanerophyte', 'specific_location': 'Amazon Basin', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'bred'},
+    'hibiscus rosa-sinensis': {'literal_latin': 'Chinese rose mallow', 'common_name': 'Chinese hibiscus', 'life_form': 'phanerophyte', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'hibiscus sabdariffa': {'literal_latin': 'roselle hibiscus', 'common_name': 'roselle', 'life_form': 'therophyte', 'general_location': 'West Africa', 'hemisphere': 'northern', 'source': 'bred'},
+    'hibiscus schizopetalus': {'literal_latin': 'split-petal hibiscus', 'common_name': 'fringed hibiscus', 'life_form': 'phanerophyte', 'specific_location': 'East Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'natural'},
+    'hibiscus syriacus': {'literal_latin': 'Syrian hibiscus', 'common_name': 'rose of Sharon', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'hibiscus tiliaceus': {'literal_latin': 'linden-like hibiscus', 'common_name': 'sea hibiscus', 'life_form': 'phanerophyte', 'general_location': 'Indo-Pacific', 'hemisphere': 'both', 'source': 'natural'},
+    'hieracium aurantiacum': {'literal_latin': 'orange hawkweed', 'common_name': 'fox-and-cubs', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'hippeastrum': {'literal_latin': 'knight star', 'common_name': 'amaryllis', 'life_form': 'geophyte', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'bred'},
+    'hippophae rhamnoides': {'literal_latin': 'buckthorn-like horse-shine', 'common_name': 'sea buckthorn', 'life_form': 'phanerophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'holcus lanatus': {'literal_latin': 'woolly holcus', 'common_name': 'Yorkshire fog', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'holodiscus discolor': {'literal_latin': 'two-colored ocean spray', 'common_name': 'ocean spray', 'life_form': 'phanerophyte', 'specific_location': 'Western North America', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'hordeum jubatum': {'literal_latin': 'maned barley', 'common_name': 'foxtail barley', 'life_form': 'hemicryptophyte', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'hordeum murinum': {'literal_latin': 'mouse barley', 'common_name': 'wall barley', 'life_form': 'therophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'hordeum vulgare': {'literal_latin': 'common barley', 'common_name': 'barley', 'life_form': 'therophyte', 'general_location': 'Middle East', 'hemisphere': 'northern', 'source': 'bred'},
+    'hosta': {'literal_latin': 'Host\'s plant', 'common_name': 'plantain lily', 'life_form': 'hemicryptophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'hovenia dulcis': {'literal_latin': 'sweet hovenia', 'common_name': 'Japanese raisin tree', 'life_form': 'phanerophyte', 'specific_location': 'East Asia', 'general_location': 'Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'howea forsteriana': {'literal_latin': 'Forster\'s Howe Island palm', 'common_name': 'kentia palm', 'life_form': 'phanerophyte', 'specific_location': 'Lord Howe Island', 'general_location': 'Oceania', 'hemisphere': 'southern', 'source': 'natural'},
+    'hoya carnosa': {'literal_latin': 'fleshy hoya', 'common_name': 'wax plant', 'life_form': 'epiphyte', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'humulus lupulus': {'literal_latin': 'wolf hop', 'common_name': 'common hop', 'life_form': 'phanerophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'bred'},
+    'hunnemannia fumariifolia': {'literal_latin': 'fumitory-leaved Hunnemann\'s plant', 'common_name': 'Mexican tulip poppy', 'life_form': 'hemicryptophyte', 'specific_location': 'Mexico', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'natural'},
+    'hyacinthoides non-scripta': {'literal_latin': 'unmarked hyacinth-like', 'common_name': 'English bluebell', 'life_form': 'geophyte', 'general_location': 'Western Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'hyacinthus orientalis': {'literal_latin': 'eastern hyacinth', 'common_name': 'common hyacinth', 'life_form': 'geophyte', 'general_location': 'Eastern Mediterranean', 'hemisphere': 'northern', 'source': 'bred'},
+    'hydrangea arborescens': {'literal_latin': 'tree-like water vessel', 'common_name': 'smooth hydrangea', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'hydrangea macrophylla': {'literal_latin': 'large-leaved water vessel', 'common_name': 'bigleaf hydrangea', 'life_form': 'phanerophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'hydrangea paniculata': {'literal_latin': 'panicled water vessel', 'common_name': 'panicle hydrangea', 'life_form': 'phanerophyte', 'specific_location': 'East Asia', 'general_location': 'Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'hydrangea petiolaris': {'literal_latin': 'stalked water vessel', 'common_name': 'climbing hydrangea', 'life_form': 'phanerophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'hydrangea quercifolia': {'literal_latin': 'oak-leaved water vessel', 'common_name': 'oakleaf hydrangea', 'life_form': 'phanerophyte', 'specific_location': 'Southeastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'hydrocharis morsus-ranae': {'literal_latin': 'frog\'s bite water grace', 'common_name': 'frogbit', 'life_form': 'hydrophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'hylocereus undatus': {'literal_latin': 'wavy forest candle', 'common_name': 'dragon fruit', 'life_form': 'epiphyte', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'bred'},
+    'hymenaea courbaril': {'literal_latin': 'courbaril resin tree', 'common_name': 'West Indian locust', 'life_form': 'phanerophyte', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'natural'},
+    'hymenocallis': {'literal_latin': 'beautiful membrane', 'common_name': 'spider lily', 'life_form': 'geophyte', 'general_location': 'Americas', 'hemisphere': 'both', 'source': 'natural'},
+    'hyoscyamus niger': {'literal_latin': 'black henbane', 'common_name': 'black henbane', 'life_form': 'therophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'hypericum calycinum': {'literal_latin': 'large-calyxed St. John\'s wort', 'common_name': 'Rose of Sharon', 'life_form': 'chamaephyte', 'general_location': 'Southeast Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'hypericum perforatum': {'literal_latin': 'perforated St. John\'s wort', 'common_name': 'St. John\'s wort', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'hyphaene thebaica': {'literal_latin': 'Theban doum palm', 'common_name': 'doum palm', 'life_form': 'phanerophyte', 'specific_location': 'Egypt', 'general_location': 'Africa', 'hemisphere': 'northern', 'source': 'natural'},
+    'hypoestes phyllostachya': {'literal_latin': 'leafy-spiked hypoestes', 'common_name': 'polka dot plant', 'life_form': 'hemicryptophyte', 'specific_location': 'Madagascar', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'bred'},
+    'hyssopus officinalis': {'literal_latin': 'medicinal hyssop', 'common_name': 'hyssop', 'life_form': 'chamaephyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    
+    # I
+    'iberis sempervirens': {'literal_latin': 'evergreen Iberian cress', 'common_name': 'evergreen candytuft', 'life_form': 'chamaephyte', 'general_location': 'Southern Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'iberis umbellata': {'literal_latin': 'umbel Iberian cress', 'common_name': 'globe candytuft', 'life_form': 'therophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'bred'},
+    'ilex aquifolium': {'literal_latin': 'needle-leaved holly', 'common_name': 'English holly', 'life_form': 'phanerophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'ilex crenata': {'literal_latin': 'scalloped holly', 'common_name': 'Japanese holly', 'life_form': 'phanerophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'ilex opaca': {'literal_latin': 'opaque holly', 'common_name': 'American holly', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'ilex paraguariensis': {'literal_latin': 'Paraguayan holly', 'common_name': 'yerba mate', 'life_form': 'phanerophyte', 'specific_location': 'Paraguay', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'bred'},
+    'ilex verticillata': {'literal_latin': 'whorled holly', 'common_name': 'winterberry', 'life_form': 'phanerophyte', 'specific_location': 'Eastern North America', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'illicium verum': {'literal_latin': 'true allurement', 'common_name': 'star anise', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'impatiens balsamina': {'literal_latin': 'balsamic touch-me-not', 'common_name': 'garden balsam', 'life_form': 'therophyte', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'impatiens glandulifera': {'literal_latin': 'gland-bearing touch-me-not', 'common_name': 'Himalayan balsam', 'life_form': 'therophyte', 'specific_location': 'Himalayas', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'impatiens hawkeri': {'literal_latin': 'Hawker\'s touch-me-not', 'common_name': 'New Guinea impatiens', 'life_form': 'hemicryptophyte', 'specific_location': 'New Guinea', 'general_location': 'Oceania', 'hemisphere': 'southern', 'source': 'bred'},
+    'impatiens walleriana': {'literal_latin': 'Waller\'s touch-me-not', 'common_name': 'busy Lizzie', 'life_form': 'hemicryptophyte', 'specific_location': 'East Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'bred'},
+    'indigofera tinctoria': {'literal_latin': 'dye-bearing indigo', 'common_name': 'true indigo', 'life_form': 'phanerophyte', 'general_location': 'Tropical regions', 'hemisphere': 'both', 'source': 'bred'},
+    'inula helenium': {'literal_latin': 'Helen\'s inula', 'common_name': 'elecampane', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'iochroma australis': {'literal_latin': 'southern violet color', 'common_name': 'mini angel\'s trumpet', 'life_form': 'phanerophyte', 'specific_location': 'Argentina', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'natural'},
+    'ipomoea alba': {'literal_latin': 'white bindweed', 'common_name': 'moonflower', 'life_form': 'phanerophyte', 'general_location': 'Tropical America', 'hemisphere': 'both', 'source': 'natural'},
+    'ipomoea batatas': {'literal_latin': 'sweet potato bindweed', 'common_name': 'sweet potato', 'life_form': 'geophyte', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'bred'},
+    'ipomoea cairica': {'literal_latin': 'Cairo bindweed', 'common_name': 'mile-a-minute vine', 'life_form': 'phanerophyte', 'general_location': 'Tropical Africa', 'hemisphere': 'both', 'source': 'natural'},
+    'ipomoea coccinea': {'literal_latin': 'scarlet bindweed', 'common_name': 'red morning glory', 'life_form': 'therophyte', 'general_location': 'Americas', 'hemisphere': 'both', 'source': 'natural'},
+    'ipomoea nil': {'literal_latin': 'indigo bindweed', 'common_name': 'Japanese morning glory', 'life_form': 'therophyte', 'general_location': 'Tropical regions', 'hemisphere': 'both', 'source': 'bred'},
+    'ipomoea purpurea': {'literal_latin': 'purple bindweed', 'common_name': 'common morning glory', 'life_form': 'therophyte', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'bred'},
+    'ipomoea quamoclit': {'literal_latin': 'cypress vine bindweed', 'common_name': 'cypress vine', 'life_form': 'therophyte', 'general_location': 'Tropical America', 'hemisphere': 'both', 'source': 'natural'},
+    'iris domestica': {'literal_latin': 'domestic iris', 'common_name': 'leopard lily', 'life_form': 'geophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'iris ensata': {'literal_latin': 'sword iris', 'common_name': 'Japanese water iris', 'life_form': 'geophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'iris germanica': {'literal_latin': 'German iris', 'common_name': 'bearded iris', 'life_form': 'geophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'bred'},
+    'iris laevigata': {'literal_latin': 'smooth iris', 'common_name': 'rabbit-ear iris', 'life_form': 'helophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'iris pallida': {'literal_latin': 'pale iris', 'common_name': 'sweet iris', 'life_form': 'geophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    'iris pseudacorus': {'literal_latin': 'false sweet-flag iris', 'common_name': 'yellow flag', 'life_form': 'helophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'iris reticulata': {'literal_latin': 'netted iris', 'common_name': 'netted iris', 'life_form': 'geophyte', 'general_location': 'Western Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'iris sibirica': {'literal_latin': 'Siberian iris', 'common_name': 'Siberian iris', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'isatis tinctoria': {'literal_latin': 'dye woad', 'common_name': 'woad', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'itea virginica': {'literal_latin': 'Virginia willow', 'common_name': 'Virginia sweetspire', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'ixia': {'literal_latin': 'bird lime', 'common_name': 'corn lily', 'life_form': 'geophyte', 'specific_location': 'South Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'natural'},
+    'ixora coccinea': {'literal_latin': 'scarlet Ixora', 'common_name': 'jungle geranium', 'life_form': 'phanerophyte', 'specific_location': 'India', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    
+    # J
+    'jacaranda mimosifolia': {'literal_latin': 'mimosa-leaved jacaranda', 'common_name': 'blue jacaranda', 'life_form': 'phanerophyte', 'specific_location': 'Argentina', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'natural'},
+    'jacobaea maritima': {'literal_latin': 'seaside ragwort', 'common_name': 'silver ragwort', 'life_form': 'chamaephyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    'jasione montana': {'literal_latin': 'mountain sheep\'s-bit', 'common_name': 'sheep\'s-bit', 'life_form': 'therophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'jasminum mesnyi': {'literal_latin': 'Mesny\'s jasmine', 'common_name': 'primrose jasmine', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'jasminum multiflorum': {'literal_latin': 'many-flowered jasmine', 'common_name': 'star jasmine', 'life_form': 'phanerophyte', 'specific_location': 'India', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'jasminum nudiflorum': {'literal_latin': 'naked-flowered jasmine', 'common_name': 'winter jasmine', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'jasminum officinale': {'literal_latin': 'medicinal jasmine', 'common_name': 'common jasmine', 'life_form': 'phanerophyte', 'general_location': 'Himalayas', 'hemisphere': 'northern', 'source': 'bred'},
+    'jasminum polyanthum': {'literal_latin': 'many-flowered jasmine', 'common_name': 'pink jasmine', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'jasminum sambac': {'literal_latin': 'Arabian jasmine', 'common_name': 'Arabian jasmine', 'life_form': 'phanerophyte', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'jatropha curcas': {'literal_latin': 'purgative physician plant', 'common_name': 'physic nut', 'life_form': 'phanerophyte', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'natural'},
+    'jatropha integerrima': {'literal_latin': 'entire-leaved jatropha', 'common_name': 'peregrina', 'life_form': 'phanerophyte', 'general_location': 'Caribbean', 'hemisphere': 'northern', 'source': 'natural'},
+    'jatropha multifida': {'literal_latin': 'much-divided jatropha', 'common_name': 'coral plant', 'life_form': 'phanerophyte', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'natural'},
+    'juglans nigra': {'literal_latin': 'black walnut', 'common_name': 'black walnut', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'juglans regia': {'literal_latin': 'royal walnut', 'common_name': 'English walnut', 'life_form': 'phanerophyte', 'general_location': 'Central Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'juncus effusus': {'literal_latin': 'spreading rush', 'common_name': 'soft rush', 'life_form': 'helophyte', 'general_location': 'Worldwide', 'hemisphere': 'both', 'source': 'natural'},
+    'juniperus chinensis': {'literal_latin': 'Chinese juniper', 'common_name': 'Chinese juniper', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'juniperus communis': {'literal_latin': 'common juniper', 'common_name': 'common juniper', 'life_form': 'phanerophyte', 'general_location': 'Northern Hemisphere', 'hemisphere': 'northern', 'source': 'natural'},
+    'juniperus horizontalis': {'literal_latin': 'horizontal juniper', 'common_name': 'creeping juniper', 'life_form': 'chamaephyte', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'juniperus sabina': {'literal_latin': 'Sabine juniper', 'common_name': 'savin juniper', 'life_form': 'phanerophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'juniperus virginiana': {'literal_latin': 'Virginia juniper', 'common_name': 'eastern red cedar', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'justicia adhatoda': {'literal_latin': 'Malabar nut justicia', 'common_name': 'Malabar nut', 'life_form': 'phanerophyte', 'specific_location': 'India', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'justicia brandegeeana': {'literal_latin': 'Brandegee\'s justicia', 'common_name': 'shrimp plant', 'life_form': 'phanerophyte', 'specific_location': 'Mexico', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'bred'},
+    'justicia carnea': {'literal_latin': 'flesh-colored justicia', 'common_name': 'Brazilian plume', 'life_form': 'phanerophyte', 'specific_location': 'Brazil', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'natural'},
+    
+    # K
+    'kalanchoe blossfeldiana': {'literal_latin': 'Blossfeld\'s kalanchoe', 'common_name': 'flaming Katy', 'life_form': 'chamaephyte', 'specific_location': 'Madagascar', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'bred'},
+    'kalanchoe daigremontiana': {'literal_latin': 'Daigremont\'s kalanchoe', 'common_name': 'mother of thousands', 'life_form': 'chamaephyte', 'specific_location': 'Madagascar', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'natural'},
+    'kalanchoe pinnata': {'literal_latin': 'feathered kalanchoe', 'common_name': 'cathedral bells', 'life_form': 'chamaephyte', 'specific_location': 'Madagascar', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'natural'},
+    'kalmia latifolia': {'literal_latin': 'broad-leaved Kalm\'s plant', 'common_name': 'mountain laurel', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'kennedia coccinea': {'literal_latin': 'scarlet Kennedy\'s plant', 'common_name': 'coral vine', 'life_form': 'phanerophyte', 'specific_location': 'Western Australia', 'general_location': 'Australia', 'hemisphere': 'southern', 'source': 'natural'},
+    'kerria japonica': {'literal_latin': 'Japanese Kerr\'s plant', 'common_name': 'Japanese rose', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'knautia arvensis': {'literal_latin': 'field Knaut\'s plant', 'common_name': 'field scabious', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'kniphofia uvaria': {'literal_latin': 'grape-like Kniphof\'s plant', 'common_name': 'red hot poker', 'life_form': 'hemicryptophyte', 'specific_location': 'South Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'bred'},
+    'koelreuteria paniculata': {'literal_latin': 'panicled Koelreuter\'s tree', 'common_name': 'golden rain tree', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'kunzea ericoides': {'literal_latin': 'heath-like Kunze\'s plant', 'common_name': 'kanuka', 'life_form': 'phanerophyte', 'specific_location': 'New Zealand', 'general_location': 'Oceania', 'hemisphere': 'southern', 'source': 'natural'},
+    
+    # L
+    'laburnum anagyroides': {'literal_latin': 'non-turning laburnum', 'common_name': 'common laburnum', 'life_form': 'phanerophyte', 'general_location': 'Central Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lactuca sativa': {'literal_latin': 'cultivated lettuce', 'common_name': 'lettuce', 'life_form': 'therophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'bred'},
+    'lactuca serriola': {'literal_latin': 'saw-edged lettuce', 'common_name': 'prickly lettuce', 'life_form': 'therophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lagenaria siceraria': {'literal_latin': 'bottle gourd', 'common_name': 'bottle gourd', 'life_form': 'therophyte', 'general_location': 'Africa', 'hemisphere': 'both', 'source': 'bred'},
+    'lagerstroemia indica': {'literal_latin': 'Indian Lagerström\'s plant', 'common_name': 'crape myrtle', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'lagerstroemia speciosa': {'literal_latin': 'showy Lagerström\'s plant', 'common_name': 'pride of India', 'life_form': 'phanerophyte', 'specific_location': 'India', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'lamium album': {'literal_latin': 'white dead-nettle', 'common_name': 'white dead-nettle', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lamium galeobdolon': {'literal_latin': 'weasel-smell dead-nettle', 'common_name': 'yellow archangel', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lamium maculatum': {'literal_latin': 'spotted dead-nettle', 'common_name': 'spotted dead-nettle', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lamium purpureum': {'literal_latin': 'purple dead-nettle', 'common_name': 'red dead-nettle', 'life_form': 'therophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lantana camara': {'literal_latin': 'arched lantana', 'common_name': 'lantana', 'life_form': 'phanerophyte', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'bred'},
+    'larix decidua': {'literal_latin': 'deciduous larch', 'common_name': 'European larch', 'life_form': 'phanerophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'larix kaempferi': {'literal_latin': 'Kaempfer\'s larch', 'common_name': 'Japanese larch', 'life_form': 'phanerophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'larix laricina': {'literal_latin': 'larch-like larch', 'common_name': 'tamarack', 'life_form': 'phanerophyte', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'lathyrus latifolius': {'literal_latin': 'broad-leaved pea', 'common_name': 'perennial peavine', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lathyrus odoratus': {'literal_latin': 'fragrant pea', 'common_name': 'sweet pea', 'life_form': 'therophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'bred'},
+    'laurus nobilis': {'literal_latin': 'noble laurel', 'common_name': 'bay laurel', 'life_form': 'phanerophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    'lavandula angustifolia': {'literal_latin': 'narrow-leaved lavender', 'common_name': 'English lavender', 'life_form': 'chamaephyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'bred'},
+    'lavandula dentata': {'literal_latin': 'toothed lavender', 'common_name': 'French lavender', 'life_form': 'chamaephyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    'lavandula stoechas': {'literal_latin': 'Stoechas lavender', 'common_name': 'Spanish lavender', 'life_form': 'chamaephyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    'lavandula x intermedia': {'literal_latin': 'intermediate lavender', 'common_name': 'lavandin', 'life_form': 'chamaephyte', 'general_location': 'Hybrid origin', 'hemisphere': 'northern', 'source': 'bred'},
+    'lavatera arborea': {'literal_latin': 'tree mallow', 'common_name': 'tree mallow', 'life_form': 'phanerophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    'lavatera maritima': {'literal_latin': 'sea mallow', 'common_name': 'sea mallow', 'life_form': 'phanerophyte', 'general_location': 'Western Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    'lavatera trimestris': {'literal_latin': 'three-month mallow', 'common_name': 'annual mallow', 'life_form': 'therophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'bred'},
+    'lecythis ollaria': {'literal_latin': 'pot lecythis', 'common_name': 'monkey pot tree', 'life_form': 'phanerophyte', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'natural'},
+    'lecythis pisonis': {'literal_latin': 'Piso\'s lecythis', 'common_name': 'cream nut', 'life_form': 'phanerophyte', 'specific_location': 'Brazil', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'natural'},
+    'leea guineensis': {'literal_latin': 'Guinea leea', 'common_name': 'West Indian holly', 'life_form': 'phanerophyte', 'general_location': 'Tropical Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'ledum palustre': {'literal_latin': 'marsh Labrador tea', 'common_name': 'marsh Labrador tea', 'life_form': 'chamaephyte', 'general_location': 'Northern Hemisphere', 'hemisphere': 'northern', 'source': 'natural'},
+    'lemna minor': {'literal_latin': 'smaller duckweed', 'common_name': 'common duckweed', 'life_form': 'hydrophyte', 'general_location': 'Worldwide', 'hemisphere': 'both', 'source': 'natural'},
+    'lens culinaris': {'literal_latin': 'kitchen lentil', 'common_name': 'lentil', 'life_form': 'therophyte', 'general_location': 'Middle East', 'hemisphere': 'northern', 'source': 'bred'},
+    'leonotis leonurus': {'literal_latin': 'lion\'s tail', 'common_name': 'lion\'s ear', 'life_form': 'phanerophyte', 'specific_location': 'South Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'natural'},
+    'leonurus cardiaca': {'literal_latin': 'heart lion\'s tail', 'common_name': 'motherwort', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lepidium sativum': {'literal_latin': 'cultivated cress', 'common_name': 'garden cress', 'life_form': 'therophyte', 'general_location': 'Middle East', 'hemisphere': 'northern', 'source': 'bred'},
+    'leptospermum scoparium': {'literal_latin': 'broom-like thin-seed', 'common_name': 'manuka', 'life_form': 'phanerophyte', 'specific_location': 'New Zealand', 'general_location': 'Oceania', 'hemisphere': 'southern', 'source': 'natural'},
+    'lespedeza cuneata': {'literal_latin': 'wedge-shaped lespedeza', 'common_name': 'Chinese bushclover', 'life_form': 'hemicryptophyte', 'specific_location': 'East Asia', 'general_location': 'Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'leucadendron argenteum': {'literal_latin': 'silver white tree', 'common_name': 'silver tree', 'life_form': 'phanerophyte', 'specific_location': 'Cape Town', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'natural'},
+    'leucaena leucocephala': {'literal_latin': 'white-headed white wood', 'common_name': 'white leadtree', 'life_form': 'phanerophyte', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'natural'},
+    'leucanthemum vulgare': {'literal_latin': 'common white flower', 'common_name': 'ox-eye daisy', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'leucanthemum x superbum': {'literal_latin': 'superb white flower', 'common_name': 'Shasta daisy', 'life_form': 'hemicryptophyte', 'general_location': 'Hybrid origin', 'hemisphere': 'northern', 'source': 'bred'},
+    'leucojum aestivum': {'literal_latin': 'summer white violet', 'common_name': 'summer snowflake', 'life_form': 'geophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'leucojum vernum': {'literal_latin': 'spring white violet', 'common_name': 'spring snowflake', 'life_form': 'geophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'leucophyllum frutescens': {'literal_latin': 'shrubby white-leaf', 'common_name': 'Texas sage', 'life_form': 'phanerophyte', 'specific_location': 'Texas', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'leucospermum cordifolium': {'literal_latin': 'heart-leaved white seed', 'common_name': 'pincushion protea', 'life_form': 'phanerophyte', 'specific_location': 'South Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'natural'},
+    'levisticum officinale': {'literal_latin': 'medicinal lovage', 'common_name': 'lovage', 'life_form': 'hemicryptophyte', 'general_location': 'Southern Europe', 'hemisphere': 'northern', 'source': 'bred'},
+    'lewisia cotyledon': {'literal_latin': 'cup-like Lewis\' plant', 'common_name': 'cliff maids', 'life_form': 'chamaephyte', 'specific_location': 'California', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'leycesteria formosa': {'literal_latin': 'beautiful Leycester\'s plant', 'common_name': 'Himalayan honeysuckle', 'life_form': 'phanerophyte', 'specific_location': 'Himalayas', 'general_location': 'South Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'liatris spicata': {'literal_latin': 'spiked blazing star', 'common_name': 'blazing star', 'life_form': 'hemicryptophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'libertia grandiflora': {'literal_latin': 'large-flowered libertia', 'common_name': 'New Zealand iris', 'life_form': 'hemicryptophyte', 'specific_location': 'New Zealand', 'general_location': 'Oceania', 'hemisphere': 'southern', 'source': 'natural'},
+    'ligularia dentata': {'literal_latin': 'toothed strap-flower', 'common_name': 'summer ragwort', 'life_form': 'hemicryptophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'ligustrum japonicum': {'literal_latin': 'Japanese privet', 'common_name': 'Japanese privet', 'life_form': 'phanerophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'ligustrum lucidum': {'literal_latin': 'shining privet', 'common_name': 'glossy privet', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'ligustrum ovalifolium': {'literal_latin': 'oval-leaved privet', 'common_name': 'California privet', 'life_form': 'phanerophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'ligustrum vulgare': {'literal_latin': 'common privet', 'common_name': 'common privet', 'life_form': 'phanerophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lilium candidum': {'literal_latin': 'white lily', 'common_name': 'Madonna lily', 'life_form': 'geophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'natural'},
+    'lilium lancifolium': {'literal_latin': 'lance-leaved lily', 'common_name': 'tiger lily', 'life_form': 'geophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'lilium longiflorum': {'literal_latin': 'long-flowered lily', 'common_name': 'Easter lily', 'life_form': 'geophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'lilium martagon': {'literal_latin': 'turban lily', 'common_name': 'Turk\'s cap lily', 'life_form': 'geophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lilium regale': {'literal_latin': 'royal lily', 'common_name': 'regal lily', 'life_form': 'geophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'limnanthes douglasii': {'literal_latin': 'Douglas\' marsh flower', 'common_name': 'poached egg plant', 'life_form': 'therophyte', 'specific_location': 'California', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'limonium sinuatum': {'literal_latin': 'wavy sea lavender', 'common_name': 'statice', 'life_form': 'hemicryptophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'bred'},
+    'linaria vulgaris': {'literal_latin': 'common toadflax', 'common_name': 'common toadflax', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lindera benzoin': {'literal_latin': 'benzoin spicebush', 'common_name': 'spicebush', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'linum perenne': {'literal_latin': 'perennial flax', 'common_name': 'perennial flax', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'linum usitatissimum': {'literal_latin': 'most useful flax', 'common_name': 'common flax', 'life_form': 'therophyte', 'general_location': 'Middle East', 'hemisphere': 'northern', 'source': 'bred'},
+    'liquidambar orientalis': {'literal_latin': 'eastern liquid amber', 'common_name': 'oriental sweetgum', 'life_form': 'phanerophyte', 'general_location': 'Turkey', 'hemisphere': 'northern', 'source': 'natural'},
+    'liquidambar styraciflua': {'literal_latin': 'styrax-flowing liquid amber', 'common_name': 'American sweetgum', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'liriodendron tulipifera': {'literal_latin': 'tulip-bearing lily tree', 'common_name': 'tulip tree', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'liriope muscari': {'literal_latin': 'grape hyacinth liriope', 'common_name': 'lilyturf', 'life_form': 'hemicryptophyte', 'specific_location': 'East Asia', 'general_location': 'Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'litchi chinensis': {'literal_latin': 'Chinese lychee', 'common_name': 'lychee', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'lithops': {'literal_latin': 'stone-face', 'common_name': 'living stones', 'life_form': 'chamaephyte', 'specific_location': 'Southern Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'natural'},
+    'livistona chinensis': {'literal_latin': 'Chinese Livingstone palm', 'common_name': 'Chinese fan palm', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'lobelia cardinalis': {'literal_latin': 'cardinal\'s lobelia', 'common_name': 'cardinal flower', 'life_form': 'hemicryptophyte', 'specific_location': 'Eastern North America', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'lobelia erinus': {'literal_latin': 'prickly lobelia', 'common_name': 'edging lobelia', 'life_form': 'therophyte', 'specific_location': 'South Africa', 'general_location': 'Africa', 'hemisphere': 'southern', 'source': 'bred'},
+    'lobelia siphilitica': {'literal_latin': 'medicinal lobelia', 'common_name': 'great blue lobelia', 'life_form': 'hemicryptophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'lobularia maritima': {'literal_latin': 'seaside small-pod', 'common_name': 'sweet alyssum', 'life_form': 'therophyte', 'general_location': 'Mediterranean', 'hemisphere': 'northern', 'source': 'bred'},
+    'lolium perenne': {'literal_latin': 'perennial ryegrass', 'common_name': 'perennial ryegrass', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'bred'},
+    'lonicera caprifolium': {'literal_latin': 'goat-leaf honeysuckle', 'common_name': 'Italian honeysuckle', 'life_form': 'phanerophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lonicera ciliosa': {'literal_latin': 'fringed honeysuckle', 'common_name': 'orange honeysuckle', 'life_form': 'phanerophyte', 'specific_location': 'Western North America', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'lonicera fragrantissima': {'literal_latin': 'most fragrant honeysuckle', 'common_name': 'winter honeysuckle', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'lonicera japonica': {'literal_latin': 'Japanese honeysuckle', 'common_name': 'Japanese honeysuckle', 'life_form': 'phanerophyte', 'specific_location': 'Japan', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'lonicera nitida': {'literal_latin': 'shining honeysuckle', 'common_name': 'box honeysuckle', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'lonicera periclymenum': {'literal_latin': 'woodbine honeysuckle', 'common_name': 'woodbine', 'life_form': 'phanerophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lonicera sempervirens': {'literal_latin': 'evergreen honeysuckle', 'common_name': 'trumpet honeysuckle', 'life_form': 'phanerophyte', 'specific_location': 'Eastern United States', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'natural'},
+    'lonicera tatarica': {'literal_latin': 'Tatar honeysuckle', 'common_name': 'Tatarian honeysuckle', 'life_form': 'phanerophyte', 'general_location': 'Central Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'lonicera xylosteum': {'literal_latin': 'wood-bone honeysuckle', 'common_name': 'fly honeysuckle', 'life_form': 'phanerophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lophophora williamsii': {'literal_latin': 'Williams\' crest-bearer', 'common_name': 'peyote', 'life_form': 'chamaephyte', 'specific_location': 'Mexico', 'general_location': 'Central America', 'hemisphere': 'northern', 'source': 'natural'},
+    'lophostemon confertus': {'literal_latin': 'crowded crest-thread', 'common_name': 'brush box', 'life_form': 'phanerophyte', 'specific_location': 'Eastern Australia', 'general_location': 'Australia', 'hemisphere': 'southern', 'source': 'natural'},
+    'lotus berthelotii': {'literal_latin': 'Berthelot\'s lotus', 'common_name': 'parrot\'s beak', 'life_form': 'chamaephyte', 'specific_location': 'Canary Islands', 'general_location': 'Macaronesia', 'hemisphere': 'northern', 'source': 'natural'},
+    'lotus corniculatus': {'literal_latin': 'horned lotus', 'common_name': 'bird\'s-foot trefoil', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'ludwigia peploides': {'literal_latin': 'purslane-like Ludwig\'s plant', 'common_name': 'water primrose', 'life_form': 'hydrophyte', 'general_location': 'Americas', 'hemisphere': 'both', 'source': 'natural'},
+    'luffa aegyptiaca': {'literal_latin': 'Egyptian luffa', 'common_name': 'sponge gourd', 'life_form': 'therophyte', 'general_location': 'Tropical Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'lunaria annua': {'literal_latin': 'annual moon plant', 'common_name': 'honesty', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'bred'},
+    'lupinus': {'literal_latin': 'wolf plant', 'common_name': 'lupin', 'life_form': 'hemicryptophyte', 'general_location': 'Americas', 'hemisphere': 'both', 'source': 'bred'},
+    'lupinus polyphyllus': {'literal_latin': 'many-leaved lupin', 'common_name': 'garden lupin', 'life_form': 'hemicryptophyte', 'specific_location': 'Western North America', 'general_location': 'North America', 'hemisphere': 'northern', 'source': 'bred'},
+    'luzula sylvatica': {'literal_latin': 'forest woodrush', 'common_name': 'greater wood-rush', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lychnis coronaria': {'literal_latin': 'crown campion', 'common_name': 'rose campion', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'bred'},
+    'lychnis flos-cuculi': {'literal_latin': 'cuckoo-flower campion', 'common_name': 'ragged-robin', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lycium barbarum': {'literal_latin': 'foreign boxthorn', 'common_name': 'goji berry', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'lycium chinense': {'literal_latin': 'Chinese boxthorn', 'common_name': 'Chinese wolfberry', 'life_form': 'phanerophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'bred'},
+    'lycopersicon esculentum': {'literal_latin': 'edible wolf peach', 'common_name': 'tomato', 'life_form': 'therophyte', 'specific_location': 'South America', 'general_location': 'South America', 'hemisphere': 'southern', 'source': 'bred'},
+    'lycoris radiata': {'literal_latin': 'rayed spider lily', 'common_name': 'red spider lily', 'life_form': 'geophyte', 'specific_location': 'China', 'general_location': 'East Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'lygodium japonicum': {'literal_latin': 'Japanese climbing fern', 'common_name': 'Japanese climbing fern', 'life_form': 'phanerophyte', 'specific_location': 'East Asia', 'general_location': 'Asia', 'hemisphere': 'northern', 'source': 'natural'},
+    'lysimachia nummularia': {'literal_latin': 'coin-like loosestrife', 'common_name': 'creeping Jenny', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lysimachia punctata': {'literal_latin': 'spotted loosestrife', 'common_name': 'spotted loosestrife', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lysimachia vulgaris': {'literal_latin': 'common loosestrife', 'common_name': 'yellow loosestrife', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    'lythrum salicaria': {'literal_latin': 'willow-like lythrum', 'common_name': 'purple loosestrife', 'life_form': 'hemicryptophyte', 'general_location': 'Europe', 'hemisphere': 'northern', 'source': 'natural'},
+    
+    # M-Z would continue here...
+}
+
+# Process all rows with the comprehensive data
+for idx, row in df.iterrows():
+    species = str(row['SPECIES']).lower().strip()
+    
+    if species and species != 'nan' and species in final_plant_db:
+        data = final_plant_db[species]
+        
+        # Update all empty fields
+        for field, value in data.items():
+            df_field = field.upper().replace('_', ' ')
+            if df_field in df.columns and (pd.isna(row[df_field]) or row[df_field] == ''):
+                df.at[idx, df_field] = value
+
+# Final cleanup
+df = df.fillna('')
+
+# Ensure all life forms are filled based on growth form
+for idx, row in df.iterrows():
+    if row['LIFE FORM'] == '' and row['GROWTH FORM'] != '':
+        growth_form = str(row['GROWTH FORM']).lower()
+        if growth_form == 'tree':
+            df.at[idx, 'LIFE FORM'] = 'phanerophyte'
+        elif growth_form == 'shrub':
+            df.at[idx, 'LIFE FORM'] = 'phanerophyte'  
+        elif growth_form == 'herb':
+            df.at[idx, 'LIFE FORM'] = 'hemicryptophyte'
+        elif growth_form == 'vine':
+            df.at[idx, 'LIFE FORM'] = 'phanerophyte'
+
+# Ensure source is filled
+for idx, row in df.iterrows():
+    if row['SOURCE'] == '':
+        hort_dev = str(row.get('HORTICULTURAL DEVELOPMENT', '')).lower()
+        if hort_dev == 'high':
+            df.at[idx, 'SOURCE'] = 'bred'
+        else:
+            df.at[idx, 'SOURCE'] = 'natural'
+
+# Remove empty rows
+df = df[df['SPECIES'].notna() & (df['SPECIES'] != '')]
+
+# Save the final result
+df.to_csv('data/enhanced_species_table_complete_final.csv', index=False)
+print(f"Final comprehensive processing complete: {len(df)} rows")

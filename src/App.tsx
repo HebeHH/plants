@@ -26,7 +26,7 @@ function App() {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/enhanced_species_table.csv');
+        const response = await fetch('/enhanced_species_table_filled.csv');
         if (!response.ok) {
           throw new Error('Failed to load species data');
         }
