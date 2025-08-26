@@ -1,14 +1,15 @@
 import React from 'react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Treemap } from 'recharts';
-import { SummaryStatistics } from '@/types';
+import { SummaryStatistics, PlantSpecies } from '@/types';
 import { SunburstChart } from '@/components/Charts/SunburstChart';
 import { PIE_COLORS, BAR_COLORS } from '@/constants/colors';
 
 interface TaxonomyTabProps {
   summaryStats: SummaryStatistics;
+  speciesData?: PlantSpecies[];
 }
 
-export const TaxonomyTab: React.FC<TaxonomyTabProps> = ({ summaryStats }) => {
+export const TaxonomyTab: React.FC<TaxonomyTabProps> = ({ summaryStats, speciesData = [] }) => {
   return (
     <div className="space-y-6">
       {/* Taxonomy Overview */}
@@ -50,6 +51,7 @@ export const TaxonomyTab: React.FC<TaxonomyTabProps> = ({ summaryStats }) => {
         </p>
         <SunburstChart 
           data={summaryStats.sunburstHierarchy || []} 
+          speciesData={speciesData}
           width={1000} 
           height={700} 
         />

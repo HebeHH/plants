@@ -1,27 +1,100 @@
-import React, { useState, useRef } from 'react';
-import { SunburstNode } from '@/types';
+import React, { useState, useRef, useMemo } from 'react';
+import { SunburstNode, PlantSpecies } from '@/types';
 import { PIE_COLORS } from '@/constants/colors';
+import { COLOR_BY_OPTIONS, createColorMapping, getColorForValue } from '@/utils/colorSchemes';
 
 interface SunburstChartProps {
   data: SunburstNode[];
+  speciesData?: PlantSpecies[];
   width?: number;
   height?: number;
 }
 
 export const SunburstChart: React.FC<SunburstChartProps> = ({ 
   data, 
+  speciesData = [],
   width = 800, 
   height = 700 
 }) => {
   const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [colorBy, setColorBy] = useState('clade');
+  const [hoveredSegment, setHoveredSegment] = useState<Segment | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
 
   const centerX = width / 2;
   const centerY = height / 2;
   const innerRadius = 50;
   const ringWidth = 90;
+
+  // Get the actual attribute to use from COLOR_BY_OPTIONS
+  const selectedOption = COLOR_BY_OPTIONS.find(opt => opt.value === colorBy);
+  const colorAttribute = selectedOption?.attribute || 'CLADE';
+
+  // Create color mapping based on selected attribute
+  const colorScheme = useMemo(() => {
+    if (!speciesData.length || colorBy === 'clade') return {};
+    return createColorMapping(speciesData, colorAttribute, colorBy);
+  }, [speciesData, colorAttribute, colorBy]);
+
+  // Create a map of species names to their attributes for quick lookup
+  const speciesAttributeMap = useMemo(() => {
+    const map = new Map<string, string>();
+    speciesData.forEach(species => {
+      if (species.SPECIES) {
+        const value = species[colorAttribute] || '';
+        map.set(species.SPECIES, value);
+      }
+    });
+    return map;
+  }, [speciesData, colorAttribute]);
+
+  // Get color legend items
+  const legendItems = useMemo(() => {
+    if (colorBy === 'clade') return [];
+    
+    const items: { color: string; label: string; count: number }[] = [];
+    const counts = new Map<string, number>();
+    
+    // Count occurrences
+    speciesData.forEach(species => {
+      const value = species[colorAttribute] || '';
+      if (value && value !== '-' && value.toLowerCase() !== 'unknown') {
+        counts.set(value, (counts.get(value) || 0) + 1);
+      }
+    });
+    
+    // Add colored items
+    Object.entries(colorScheme).forEach(([value, color]) => {
+      const count = counts.get(value) || 0;
+      if (count > 0) {
+        items.push({ color, label: value, count });
+      }
+    });
+    
+    // Add unknown/empty
+    const unknownCount = speciesData.filter(s => {
+      const value = s[colorAttribute];
+      return !value || value === '-' || value.toLowerCase() === 'unknown';
+    }).length;
+    
+    if (unknownCount > 0) {
+      items.push({ color: '#d1d5db', label: 'Unknown/Empty', count: unknownCount });
+    }
+    
+    // Add "Other" if there are values not in top 8
+    const otherCount = Array.from(counts.entries())
+      .filter(([value]) => !colorScheme[value])
+      .reduce((sum, [, count]) => sum + count, 0);
+    
+    if (otherCount > 0) {
+      items.push({ color: '#6b7280', label: 'Other', count: otherCount });
+    }
+    
+    return items.sort((a, b) => b.count - a.count);
+  }, [colorBy, speciesData, colorAttribute, colorScheme]);
 
   if (!data || data.length === 0) {
     return (
@@ -101,6 +174,7 @@ export const SunburstChart: React.FC<SunburstChartProps> = ({
     level: string;
     name: string;
     value: number;
+    attributeValue?: string;
   }
 
   interface Label {
@@ -229,6 +303,62 @@ export const SunburstChart: React.FC<SunburstChartProps> = ({
                   value: genusData.value
                 });
 
+                // Species ring (outermost) - apply custom colors here
+                let speciesStartAngle = genusStartAngle;
+                if (genusData.children) {
+                  genusData.children.forEach((speciesData) => {
+                    const speciesAngle = (speciesData.value / genusData.value) * genusAngle;
+                    let speciesColor = genusColor;
+                    
+                    // Apply custom color scheme to species ring
+                    if (colorBy !== 'clade' && speciesAttributeMap.has(speciesData.name)) {
+                      const attributeValue = speciesAttributeMap.get(speciesData.name) || '';
+                      speciesColor = getColorForValue(attributeValue, colorScheme);
+                    }
+                    
+                    segments.push({
+                      path: createArc(innerRadius + 4 * ringWidth, innerRadius + 5 * ringWidth, speciesStartAngle, speciesStartAngle + speciesAngle),
+                      fill: speciesColor,
+                      opacity: colorBy === 'clade' ? 0.3 : 1,
+                      level: 'species',
+                      name: speciesData.name,
+                      value: speciesData.value,
+                      attributeValue: colorBy !== 'clade' ? (speciesAttributeMap.get(speciesData.name) || 'Unknown') : undefined
+                    });
+
+                    speciesStartAngle += speciesAngle;
+                  });
+                } else {
+                  // If no species children, create placeholder species segments based on genus count
+                  const speciesPerGenus = genusData.value;
+                  const speciesAngleEach = genusAngle / speciesPerGenus;
+                  
+                  // Try to match species from the genus
+                  const genusSpecies = speciesData.filter(s => s.GENUS === genusData.name);
+                  
+                  genusSpecies.forEach((species, idx) => {
+                    const speciesAngle = speciesAngleEach;
+                    let speciesColor = genusColor;
+                    
+                    if (colorBy !== 'clade' && species.SPECIES) {
+                      const attributeValue = species[colorAttribute] || '';
+                      speciesColor = getColorForValue(attributeValue, colorScheme);
+                    }
+                    
+                    segments.push({
+                      path: createArc(innerRadius + 4 * ringWidth, innerRadius + 5 * ringWidth, speciesStartAngle, speciesStartAngle + speciesAngle),
+                      fill: speciesColor,
+                      opacity: colorBy === 'clade' ? 0.3 : 1,
+                      level: 'species',
+                      name: species.SPECIES || 'Unknown',
+                      value: 1,
+                      attributeValue: colorBy !== 'clade' ? (species[colorAttribute] || 'Unknown') : undefined
+                    });
+
+                    speciesStartAngle += speciesAngle;
+                  });
+                }
+
                 genusStartAngle += genusAngle;
               });
             }
@@ -246,7 +376,29 @@ export const SunburstChart: React.FC<SunburstChartProps> = ({
 
   return (
     <div className="w-full">
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center space-x-3">
+          <label htmlFor="color-by" className="text-sm font-medium text-gray-700">
+            Color outer ring by:
+          </label>
+          <select
+            id="color-by"
+            value={colorBy}
+            onChange={(e) => setColorBy(e.target.value)}
+            className="block w-48 px-3 py-1.5 text-sm bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+          >
+            {COLOR_BY_OPTIONS.map(option => {
+              // Only show options that have data
+              const hasData = option.value === 'clade' || 
+                speciesData.some(s => s[option.attribute] && s[option.attribute] !== '' && s[option.attribute] !== '-');
+              return hasData ? (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ) : null;
+            })}
+          </select>
+        </div>
         <div className="bg-gray-100 rounded-lg p-2 flex items-center space-x-4">
           <button
             onClick={resetView}
@@ -260,7 +412,7 @@ export const SunburstChart: React.FC<SunburstChartProps> = ({
         </div>
       </div>
 
-      <div className="w-full overflow-hidden border border-gray-200 rounded-lg bg-white">
+      <div className="relative w-full overflow-hidden border border-gray-200 rounded-lg bg-white">
         <svg 
           ref={svgRef}
           width="100%" 
@@ -283,7 +435,27 @@ export const SunburstChart: React.FC<SunburstChartProps> = ({
                 opacity={segment.opacity}
                 stroke="#fff"
                 strokeWidth="1"
-                className="hover:opacity-100 transition-opacity"
+                className="hover:opacity-100 transition-opacity cursor-pointer"
+                onMouseEnter={(e) => {
+                  setHoveredSegment(segment);
+                  const rect = svgRef.current?.getBoundingClientRect();
+                  if (rect) {
+                    setMousePosition({
+                      x: e.clientX - rect.left,
+                      y: e.clientY - rect.top
+                    });
+                  }
+                }}
+                onMouseMove={(e) => {
+                  const rect = svgRef.current?.getBoundingClientRect();
+                  if (rect) {
+                    setMousePosition({
+                      x: e.clientX - rect.left,
+                      y: e.clientY - rect.top
+                    });
+                  }
+                }}
+                onMouseLeave={() => setHoveredSegment(null)}
               >
                 <title>{`${segment.level}: ${segment.name} (${segment.value} species)`}</title>
               </path>
@@ -334,11 +506,52 @@ export const SunburstChart: React.FC<SunburstChartProps> = ({
               fontSize="12"
               fill="#9ca3af"
             >
-              4 taxonomic levels
+              5 taxonomic levels
             </text>
           </g>
         </svg>
+        
+        {/* Hover Tooltip */}
+        {hoveredSegment && (
+          <div
+            className="absolute z-10 bg-gray-900 text-white p-2 rounded shadow-lg pointer-events-none"
+            style={{
+              left: mousePosition.x + 10,
+              top: mousePosition.y - 10,
+              transform: mousePosition.x > width * 0.7 ? 'translateX(-110%)' : 'none'
+            }}
+          >
+            <div className="text-sm font-semibold capitalize">{hoveredSegment.level}</div>
+            <div className="text-sm">{hoveredSegment.name}</div>
+            <div className="text-sm">{hoveredSegment.value} species</div>
+            {hoveredSegment.attributeValue && colorBy !== 'clade' && (
+              <div className="text-sm mt-1 pt-1 border-t border-gray-700">
+                {selectedOption?.label}: {hoveredSegment.attributeValue}
+              </div>
+            )}
+          </div>
+        )}
       </div>
+      
+      {/* Color Legend */}
+      {colorBy !== 'clade' && legendItems.length > 0 && (
+        <div className="mt-4 bg-gray-50 rounded-lg p-4">
+          <h4 className="text-sm font-semibold text-gray-700 mb-2">Color Legend</h4>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {legendItems.map((item, index) => (
+              <div key={index} className="flex items-center space-x-2">
+                <div 
+                  className="w-4 h-4 rounded" 
+                  style={{ backgroundColor: item.color }}
+                />
+                <span className="text-xs text-gray-600">
+                  {item.label} ({item.count})
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

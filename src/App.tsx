@@ -117,7 +117,7 @@ function App() {
         )}
 
         {activeTab === 'taxonomy' && (
-          <TaxonomyTab summaryStats={summaryStats} />
+          <TaxonomyTab summaryStats={summaryStats} speciesData={data} />
         )}
 
         {activeTab === 'table' && (
