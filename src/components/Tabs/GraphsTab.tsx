@@ -181,31 +181,43 @@ export const GraphsTab: React.FC<GraphsTabProps> = ({
       <div className="flex flex-wrap gap-6">
         <div className="bg-white rounded-xl shadow-sm p-6 min-w-[500px] flex-1">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Commercial Status vs Source (Geographic Origin)</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={commercialVsSourceData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              {Object.keys(commercialVsSourceData[0] || {}).filter(key => key !== 'name').map((source, index) => (
-                <Bar key={source} dataKey={source} stackId="a" fill={BAR_COLORS[index % BAR_COLORS.length]} />
-              ))}
-            </BarChart>
-          </ResponsiveContainer>
+          {commercialVsSourceData && commercialVsSourceData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={commercialVsSourceData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {Object.keys(commercialVsSourceData[0] || {}).filter(key => key !== 'name').map((source, index) => (
+                  <Bar key={source} dataKey={source} stackId="a" fill={BAR_COLORS[index % BAR_COLORS.length]} />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-[300px] text-gray-500">
+              No commercial status vs source data available
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-xl shadow-sm p-6 min-w-[500px] flex-1">
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Geographic Origin Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={generalLocationData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#10b981" />
-            </BarChart>
-          </ResponsiveContainer>
+          {generalLocationData && generalLocationData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={generalLocationData} margin={{ bottom: 100 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="#10b981" />
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-[300px] text-gray-500">
+              No geographic location data available
+            </div>
+          )}
         </div>
       </div>
 

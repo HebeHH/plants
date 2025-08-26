@@ -177,10 +177,12 @@ export const useDataProcessing = (data: PlantSpecies[]) => {
       }
     });
     
-    return Object.entries(locationCounts)
+    const result = Object.entries(locationCounts)
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value)
       .slice(0, 15);
+    
+    return result;
   }, [data]);
 
   // Growth form vs Life-form type
