@@ -20,7 +20,18 @@ function App() {
   const [activeTab, setActiveTab] = useState<TabType>('summary');
   const [selectedSource, setSelectedSource] = useState<string>('sonnet-chat');
 
-  const { summaryStats, hortDevChartData, familyByOriginChartData } = useDataProcessing(data);
+  const { 
+    summaryStats, 
+    hortDevChartData, 
+    familyByOriginChartData,
+    growthFormVsCladeData,
+    growthHabitVsHortDevData,
+    hortDevVsCommercialData,
+    commercialVsSourceData,
+    generalLocationData,
+    growthFormVsLifeFormData,
+    hemisphereVsOrderData
+  } = useDataProcessing(data);
   const { filters, filteredData, handleFilterChange, activeFilterCount } = useFilters(data);
   const { sortedData, sortConfig, handleSort } = useSorting(filteredData);
 
@@ -113,6 +124,13 @@ function App() {
             summaryStats={summaryStats}
             hortDevChartData={hortDevChartData}
             familyByOriginChartData={familyByOriginChartData}
+            growthFormVsCladeData={growthFormVsCladeData}
+            growthHabitVsHortDevData={growthHabitVsHortDevData}
+            hortDevVsCommercialData={hortDevVsCommercialData}
+            commercialVsSourceData={commercialVsSourceData}
+            generalLocationData={generalLocationData}
+            growthFormVsLifeFormData={growthFormVsLifeFormData}
+            hemisphereVsOrderData={hemisphereVsOrderData}
           />
         )}
 

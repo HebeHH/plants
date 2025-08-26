@@ -6,10 +6,13 @@ export interface PlantSpecies {
   'CLADE'?: string;
   'GROWTH FORM'?: string;
   'GEOGRAPHIC ORIGIN'?: string;
+  'GENERAL LOCATION'?: string;
   'GROWTH HABIT'?: string;
   'HORTICULTURAL DEVELOPMENT'?: string;
   'COMMERCIAL STATUS'?: string;
   'CONSERVATION STATUS'?: string;
+  'HEMISPHERE'?: string;
+  'LIFE-FORM TYPE'?: string;
   [key: string]: string | undefined;
 }
 

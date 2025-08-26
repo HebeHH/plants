@@ -40,7 +40,7 @@ export const calculateSummaryStatistics = (data: PlantSpecies[]): SummaryStatist
   // Count by geographic origin (top 5)
   const geographicCounts: Record<string, number> = {};
   data.forEach(row => {
-    const origin = row['GEOGRAPHIC ORIGIN'];
+    const origin = row['GENERAL LOCATION'] || row['GEOGRAPHIC ORIGIN'];
     if (origin) geographicCounts[origin] = (geographicCounts[origin] || 0) + 1;
   });
 
@@ -85,7 +85,7 @@ export const calculateSummaryStatistics = (data: PlantSpecies[]): SummaryStatist
   const familyByOrigin: Record<string, Record<string, number>> = {};
   data.forEach(row => {
     const family = row['FAMILY'];
-    const origin = row['GEOGRAPHIC ORIGIN'];
+    const origin = row['GENERAL LOCATION'] || row['GEOGRAPHIC ORIGIN'];
     if (family && origin) {
       if (!familyByOrigin[family]) {
         familyByOrigin[family] = {};
