@@ -6,6 +6,7 @@ import { SummaryTab } from '@/components/Tabs/SummaryTab';
 import { GraphsTab } from '@/components/Tabs/GraphsTab';
 import { TaxonomyTab } from '@/components/Tabs/TaxonomyTab';
 import { TableTab } from '@/components/Tabs/TableTab';
+import { DataComparisonTab } from '@/components/Tabs/DataComparisonTab';
 import { useDataProcessing } from '@/hooks/useDataProcessing';
 import { useFilters } from '@/hooks/useFilters';
 import { useSorting } from '@/hooks/useSorting';
@@ -116,6 +117,10 @@ function App() {
             onFilterChange={handleFilterChange}
             onSort={handleSort}
           />
+        )}
+
+        {activeTab === 'comparison' && (
+          <DataComparisonTab />
         )}
       </div>
     </div>

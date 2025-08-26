@@ -1,7 +1,7 @@
 import React from 'react';
-import { TrendingUp, Target, GitBranch, Table } from 'lucide-react';
+import { TrendingUp, Target, GitBranch, Table, BarChart2 } from 'lucide-react';
 
-export type TabType = 'summary' | 'graphs' | 'taxonomy' | 'table';
+export type TabType = 'summary' | 'graphs' | 'taxonomy' | 'table' | 'comparison';
 
 interface TabNavigationProps {
   activeTab: TabType;
@@ -13,6 +13,7 @@ const tabs = [
   { id: 'graphs' as TabType, label: 'Graphs', icon: Target },
   { id: 'taxonomy' as TabType, label: 'Taxonomy', icon: GitBranch },
   { id: 'table' as TabType, label: 'Data Table', icon: Table },
+  { id: 'comparison' as TabType, label: 'Data Comparison', icon: BarChart2 },
 ];
 
 export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange }) => {
