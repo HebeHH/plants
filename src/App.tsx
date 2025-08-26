@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PlantSpecies } from '@/types';
 import { Header } from '@/components/Common/Header';
 import { TabNavigation, TabType } from '@/components/Common/TabNavigation';
+import { DataSourceSelector, dataSources } from '@/components/Common/DataSourceSelector';
 import { SummaryTab } from '@/components/Tabs/SummaryTab';
 import { GraphsTab } from '@/components/Tabs/GraphsTab';
 import { TaxonomyTab } from '@/components/Tabs/TaxonomyTab';
@@ -17,17 +18,22 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('summary');
+  const [selectedSource, setSelectedSource] = useState<string>('sonnet-chat');
 
   const { summaryStats, hortDevChartData, familyByOriginChartData } = useDataProcessing(data);
   const { filters, filteredData, handleFilterChange, activeFilterCount } = useFilters(data);
   const { sortedData, sortConfig, handleSort } = useSorting(filteredData);
 
-  // Load CSV data on component mount
+  // Load CSV data when data source changes
   useEffect(() => {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/enhanced_species_table_filled.csv');
+        const source = dataSources.find(s => s.id === selectedSource);
+        if (!source) {
+          throw new Error('Invalid data source selected');
+        }
+        const response = await fetch(source.path);
         if (!response.ok) {
           throw new Error('Failed to load species data');
         }
@@ -43,7 +49,7 @@ function App() {
     };
 
     loadData();
-  }, []);
+  }, [selectedSource]);
 
   if (isLoading) {
     return (
@@ -85,6 +91,13 @@ function App() {
           totalSpecies={data.length} 
           taxonomyValidation={summaryStats.taxonomyValidation}
         />
+        
+        <div className="mb-6">
+          <DataSourceSelector 
+            selectedSource={selectedSource}
+            onSourceChange={setSelectedSource}
+          />
+        </div>
         
         <TabNavigation 
           activeTab={activeTab}
