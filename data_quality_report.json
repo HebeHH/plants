@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-08-27T02:28:19.563628",
+  "total_records": 749,
+  "fields_completeness": {
+    "SPECIES": "100.0%",
+    "LITERAL LATIN": "15.6%",
+    "COMMON NAME": "96.5%",
+    "GENUS": "100.0%",
+    "FAMILY": "100.0%",
+    "ORDER": "100.0%",
+    "CLADE": "99.9%",
+    "COMMON GENUS NAME": "38.1%",
+    "COMMON FAMILY NAME": "27.6%",
+    "LIFE FORM": "100.0%",
+    "SEEN AT": "95.1%",
+    "GROWTH FORM": "100.0%",
+    "SPECIFIC LOCATION": "23.8%",
+    "GENERAL LOCATION": "91.2%",
+    "HEMISPHERE": "86.1%",
+    "GROWTH HABIT": "100.0%",
+    "HORTICULTURAL DEVELOPMENT": "100.0%",
+    "COMMERCIAL STATUS": "100.0%",
+    "CONSERVATION STATUS": "100.0%",
+    "SOURCE": "100.0%",
+    "NOTES": "3.9%",
+    "IMAGE": "15.4%"
+  },
+  "average_confidence": 0.0,
+  "data_source_distribution": {}
+}

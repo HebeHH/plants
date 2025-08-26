@@ -1,0 +1,23 @@
+{
+  "api_keys": {
+    "tropicos": "YOUR_TROPICOS_API_KEY_HERE",
+    "ipni": "YOUR_IPNI_API_KEY_HERE",
+    "eol": "YOUR_EOL_API_KEY_HERE"
+  },
+  "timeout": 30,
+  "max_retries": 3,
+  "rate_limit_delay": 1.0,
+  "cache_expiry_days": 7,
+  "data_sources": {
+    "enable_gbif": true,
+    "enable_tropicos": true,
+    "enable_ipni": true,
+    "enable_powo": true,
+    "enable_eol": true
+  },
+  "validation": {
+    "strict_mode": true,
+    "require_binomial_names": true,
+    "min_confidence_score": 0.3
+  }
+}
