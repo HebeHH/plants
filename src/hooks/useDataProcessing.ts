@@ -71,7 +71,9 @@ export const useDataProcessing = (data: PlantSpecies[]) => {
     return Object.entries(growthFormCladeCounts).map(([growthForm, cladeCounts]) => {
       const result: Record<string, any> = { name: growthForm };
       clades.forEach(clade => {
-        result[clade] = cladeCounts[clade] || 0;
+        if (clade) {
+          result[clade] = cladeCounts[clade] || 0;
+        }
       });
       return result;
     });
@@ -205,7 +207,9 @@ export const useDataProcessing = (data: PlantSpecies[]) => {
     return Object.entries(growthFormLifeFormCounts).map(([growthForm, lifeFormCounts]) => {
       const result: Record<string, any> = { name: growthForm };
       lifeFormTypes.forEach(lifeForm => {
-        result[lifeForm] = lifeFormCounts[lifeForm] || 0;
+        if (lifeForm) {
+          result[lifeForm] = lifeFormCounts[lifeForm] || 0;
+        }
       });
       return result;
     });
